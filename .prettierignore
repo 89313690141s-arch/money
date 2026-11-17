@@ -1,0 +1,8 @@
+node_modules
+.next
+src/generated
+outputs
+backups
+pnpm-lock.yaml
+test-results
+playwright-report

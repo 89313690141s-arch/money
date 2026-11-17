@@ -1,0 +1,52 @@
+{
+  "name": "personal-finance",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {"node":"24.x"},
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3000",
+    "build": "prisma generate && next build",
+    "start": "next start --hostname 0.0.0.0",
+    "test": "vitest run tests/domain",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "db:migrate": "prisma migrate deploy",
+    "owner:create": "tsx scripts/create-owner.ts",
+    "demo:create": "tsx scripts/create-demo.ts"
+  },
+  "dependencies": {
+    "@fontsource/manrope": "5.2.8",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "better-auth": "1.7.25",
+    "dotenv": "17.3.1",
+    "lucide-react": "0.577.0",
+    "next": "16.4.6",
+    "papaparse": "5.5.3",
+    "pg": "8.20.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "3.8.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@types/node": "24.10.0",
+    "@types/papaparse": "5.5.2",
+    "@types/pg": "8.18.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.4.6",
+    "prettier": "3.8.1",
+    "prisma": "7.10.1",
+    "sharp": "0.34.5",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

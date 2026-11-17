@@ -1,0 +1,55 @@
+name: personal-finance-production
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: finance
+      POSTGRES_USER: finance
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set password}
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finance -d finance"]
+      interval: 5s
+      retries: 20
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://finance:${POSTGRES_PASSWORD}@db:5432/finance
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Set auth secret}
+      BETTER_AUTH_URL: https://${DOMAIN:?Set domain}
+    expose:
+      - "3000"
+  backup:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "0:0"
+    environment:
+      DATABASE_URL: postgresql://finance:${POSTGRES_PASSWORD}@db:5432/finance
+      BACKUP_KEY: ${BACKUP_KEY:?Set backup key}
+      BACKUP_DIRECTORY: /backups
+    command: ["node", "scripts/backup.mjs", "--daily"]
+    volumes:
+      - backups:/backups
+  https:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy:/data
+    depends_on: [app]
+volumes:
+  data:
+  backups:
+  caddy:

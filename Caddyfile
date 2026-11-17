@@ -1,0 +1,7 @@
+{$DOMAIN} {
+  encode zstd gzip
+  header Strict-Transport-Security "max-age=31536000"
+  header X-Content-Type-Options nosniff
+  header Referrer-Policy same-origin
+  reverse_proxy app:3000
+}
